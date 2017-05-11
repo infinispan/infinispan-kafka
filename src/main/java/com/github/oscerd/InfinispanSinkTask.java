@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class InfinispanSinkTask extends SinkTask {
 	private static Logger log = LoggerFactory.getLogger(InfinispanSinkTask.class);
 	private RemoteCacheManager cacheManager;
-	private RemoteCache<String, String> cache;
+	private RemoteCache<Object, Object> cache;
 	private InfinispanSinkConnectorConfig config;
 
 	@Override
@@ -49,7 +49,7 @@ public class InfinispanSinkTask extends SinkTask {
 		while (it.hasNext()) {
 			SinkRecord record = (SinkRecord) it.next();
 			log.info("Record kafka coordinates:({}-{}-{}). Writing it to Infinispan...", record.topic(), record.key(), record.value());
-			cache.put(record.key().toString(), record.value().toString());
+			cache.put(record.key(), record.value());
 		}
 	}
 
