@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
+import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
@@ -49,7 +50,11 @@ public class InfinispanSinkTask extends SinkTask {
 		while (it.hasNext()) {
 			SinkRecord record = (SinkRecord) it.next();
 			log.info("Record kafka coordinates:({}-{}-{}). Writing it to Infinispan...", record.topic(), record.key(), record.value());
-			cache.put(record.key(), record.value());
+			defineCacheFlags();
+			Object returnValue = cache.put(record.key(), record.value());
+			if (returnValue != null) {
+			    log.info("The put operation returned the following result: {}", returnValue);
+			}
 		}
 	}
 
@@ -61,6 +66,18 @@ public class InfinispanSinkTask extends SinkTask {
 	@Override
 	public void stop() {
 		cacheManager.stop();
+	}
+	
+	private void defineCacheFlags() {
+		if (config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_FORCE_RETURN_VALUES_CONF)) {
+           cache = cache.withFlags(Flag.FORCE_RETURN_VALUE);
+		}
+		if (config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_MAXIDLE_CONF)) {
+	       cache = cache.withFlags(Flag.DEFAULT_MAXIDLE);
+        }
+		if (config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_LIFESPAN_CONF)) {
+		   cache = cache.withFlags(Flag.DEFAULT_LIFESPAN);
+	    }
 	}
 
 }
