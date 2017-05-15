@@ -1,4 +1,4 @@
-package com.github.oscerd;
+package com.github.oscerd.kafka.connect.infinispan;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.github.oscerd;
+package com.github.oscerd.kafka.connect.infinispan;
 
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;

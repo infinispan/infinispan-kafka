@@ -1,6 +1,8 @@
-package com.github.oscerd;
+package com.github.oscerd.kafka.connect.infinispan;
 
 import org.junit.Test;
+
+import com.github.oscerd.kafka.connect.infinispan.InfinispanSinkConnectorConfig;
 
 public class InfinispanConnectorConfigTest {
 	@Test
