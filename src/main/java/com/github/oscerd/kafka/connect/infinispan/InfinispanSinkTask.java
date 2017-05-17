@@ -28,6 +28,8 @@ import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
+import org.infinispan.protostream.SerializationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +55,8 @@ public class InfinispanSinkTask extends SinkTask {
 		// Connect to the server
 		cacheManager = new RemoteCacheManager(builder.build());
 		cache = cacheManager.getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
+		SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
+        //TODO add a config option to defines the .proto files we will use, and also a config option for the related marshallers
 	}
 
 	@Override
