@@ -51,7 +51,8 @@ public class InfinispanSinkTask extends SinkTask {
 		ConfigurationBuilder builder = new ConfigurationBuilder();
 		builder.addServer()
 		        .host(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOSTS_CONF))
-				.port(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOTROD_PORT_CONF));
+				.port(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOTROD_PORT_CONF))
+				.marshaller(new ProtoStreamMarshaller());
 		// Connect to the server
 		cacheManager = new RemoteCacheManager(builder.build());
 		cache = cacheManager.getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
