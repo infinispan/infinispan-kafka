@@ -30,9 +30,10 @@ import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
-import org.infinispan.protostream.BaseMarshaller;
-import org.infinispan.protostream.FileDescriptorSource;
 import org.infinispan.protostream.SerializationContext;
+import org.infinispan.protostream.annotations.ProtoSchemaBuilder;
+import org.infinispan.protostream.annotations.ProtoSchemaBuilderException;
+import org.infinispan.query.remote.client.ProtobufMetadataManagerConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,27 +65,23 @@ public class InfinispanSinkTask extends SinkTask {
 		// Connect to the server
 		cacheManager = new RemoteCacheManager(builder.build());
 		if (useProto) {
-		    SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
-		    String protobufSchemaFiles = config.getString(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_FILES_CONF);
-		    String[] list = protobufSchemaFiles.split(",");
-		    log.info("Adding fds");
-		    FileDescriptorSource fds = new FileDescriptorSource();
-		    try {
-				fds.addProtoFiles(list);
-			    serCtx.registerProtoFiles(fds);
-			} catch (IOException e) {
+			SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
+			ProtoSchemaBuilder protoSchemaBuilder = new ProtoSchemaBuilder();
+			Class<?> marshaller = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLER_CLASS_CONF);
+			String memoSchemaFile = null;
+			try {
+				memoSchemaFile = protoSchemaBuilder
+						.fileName("file.proto")
+						.packageName("test")
+						.addClass(marshaller)
+						.build(serCtx);
+			} catch (ProtoSchemaBuilderException | IOException e) {
 				e.printStackTrace();
 			}
-		    Class<?> marshallerClass = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLERS_CONF);
-		    try {
-				serCtx.registerMarshaller((BaseMarshaller) marshallerClass.newInstance());
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+
+			// register the schemas with the server too
+			RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
+			metadataCache.put("memo.proto", memoSchemaFile);
 		}
 		cache = cacheManager.getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
 	}
