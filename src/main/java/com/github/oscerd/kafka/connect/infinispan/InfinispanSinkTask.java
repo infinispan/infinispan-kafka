@@ -17,11 +17,8 @@
 package com.github.oscerd.kafka.connect.infinispan;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
@@ -31,14 +28,11 @@ import org.apache.kafka.connect.sink.SinkTask;
 import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
-import org.infinispan.client.hotrod.Search;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
 import org.infinispan.protostream.BaseMarshaller;
 import org.infinispan.protostream.FileDescriptorSource;
 import org.infinispan.protostream.SerializationContext;
-import org.infinispan.query.dsl.Query;
-import org.infinispan.query.dsl.QueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,8 +77,12 @@ public class InfinispanSinkTask extends SinkTask {
 			}
 		    Class<?> marshallerClass = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLERS_CONF);
 		    try {
-			    serCtx.registerMarshaller((BaseMarshaller) marshallerClass.newInstance());
-			} catch (IllegalAccessException | InstantiationException e) {
+				serCtx.registerMarshaller((BaseMarshaller) marshallerClass.newInstance());
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 		}
