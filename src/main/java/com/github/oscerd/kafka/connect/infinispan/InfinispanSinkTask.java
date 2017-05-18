@@ -31,11 +31,14 @@ import org.apache.kafka.connect.sink.SinkTask;
 import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
+import org.infinispan.client.hotrod.Search;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
 import org.infinispan.protostream.BaseMarshaller;
 import org.infinispan.protostream.FileDescriptorSource;
 import org.infinispan.protostream.SerializationContext;
+import org.infinispan.query.dsl.Query;
+import org.infinispan.query.dsl.QueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,24 +56,24 @@ public class InfinispanSinkTask extends SinkTask {
 	@Override
 	public void start(Map<String, String> map) {
 		// Create a configuration for a locally-running server
-		log.info(AuthorMarshaller.class.getName());
 		config = new InfinispanSinkConnectorConfig(map);
 		ConfigurationBuilder builder = new ConfigurationBuilder();
 		builder.addServer()
 		        .host(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOSTS_CONF))
-				.port(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOTROD_PORT_CONF));	
+				.port(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOTROD_PORT_CONF));
 		boolean useProto = config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_USE_PROTO_CONF);
 		if (useProto) {
+			log.info("Adding protostream");
             builder.marshaller(new ProtoStreamMarshaller());
 		}
 				
 		// Connect to the server
 		cacheManager = new RemoteCacheManager(builder.build());
-		cache = cacheManager.getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
 		if (useProto) {
 		    SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
 		    String protobufSchemaFiles = config.getString(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_FILES_CONF);
 		    String[] list = protobufSchemaFiles.split(",");
+		    log.info("Adding fds");
 		    FileDescriptorSource fds = new FileDescriptorSource();
 		    try {
 				fds.addProtoFiles(list);
@@ -85,6 +88,7 @@ public class InfinispanSinkTask extends SinkTask {
 				e.printStackTrace();
 			} 
 		}
+		cache = cacheManager.getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
 	}
 
 	@Override
@@ -100,7 +104,6 @@ public class InfinispanSinkTask extends SinkTask {
 			log.info("Record kafka coordinates:({}-{}-{}). Writing it to Infinispan...", record.topic(), record.key(), record.value());
 			defineCacheFlags();
 			Object returnValue = cache.put(record.key(), record.value());
-			log.info("Cache : " + cache.get(record.key()));
 			if (returnValue != null) {
 			    log.info("The put operation returned the following result: {}", returnValue);
 			}
