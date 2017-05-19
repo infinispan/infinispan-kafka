@@ -19,6 +19,7 @@ package com.github.oscerd.kafka.connect.infinispan;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
@@ -36,6 +37,8 @@ import org.infinispan.protostream.annotations.ProtoSchemaBuilderException;
 import org.infinispan.query.remote.client.ProtobufMetadataManagerConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class InfinispanSinkTask extends SinkTask {
 	private static Logger log = LoggerFactory.getLogger(InfinispanSinkTask.class);
@@ -98,7 +101,15 @@ public class InfinispanSinkTask extends SinkTask {
 			SinkRecord record = (SinkRecord) it.next();
 			log.info("Record kafka coordinates:({}-{}-{}). Writing it to Infinispan...", record.topic(), record.key(), record.value());
 			defineCacheFlags();
-			Object returnValue = cache.put(record.key(), record.value());
+			ObjectMapper objectMapper = new ObjectMapper();
+			Class<?> marshaller = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLER_CLASS_CONF);
+			Object p = null;			
+			try {
+				p = objectMapper.readValue((String) record.value(), marshaller);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Object returnValue = cache.put(record.key(), p);
 			if (returnValue != null) {
 			    log.info("The put operation returned the following result: {}", returnValue);
 			}
