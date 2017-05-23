@@ -84,7 +84,7 @@ public class InfinispanSinkTask extends SinkTask {
 
 			// register the schemas with the server too
 			RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
-			metadataCache.put("memo.proto", memoSchemaFile);
+			metadataCache.put("file.proto", memoSchemaFile);
 		}
 		cache = cacheManager.getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
 	}
