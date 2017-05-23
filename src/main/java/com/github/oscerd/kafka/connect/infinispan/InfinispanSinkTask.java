@@ -19,7 +19,6 @@ package com.github.oscerd.kafka.connect.infinispan;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
@@ -79,6 +78,7 @@ public class InfinispanSinkTask extends SinkTask {
 						.addClass(marshaller)
 						.build(serCtx);
 			} catch (ProtoSchemaBuilderException | IOException e) {
+				log.error("Error during build of Protostream Schema {}", e.getMessage());
 				e.printStackTrace();
 			}
 
@@ -107,6 +107,7 @@ public class InfinispanSinkTask extends SinkTask {
 			try {
 				p = objectMapper.readValue((String) record.value(), marshaller);
 			} catch (IOException e) {
+				log.error("Error during Deserialization of value {}", e.getMessage());
 				e.printStackTrace();
 			}
 			Object returnValue = cache.put(record.key(), p);
