@@ -35,12 +35,15 @@ import org.infinispan.query.remote.client.ProtobufMetadataManagerConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class InfinispanTaskTestIT {
-	  private RemoteCacheManager cacheManager;
+    private static final Logger LOG = LoggerFactory.getLogger(InfinispanTaskTestIT.class);
+	private RemoteCacheManager cacheManager;
 	
 	@Before
 	public void setUp() {
