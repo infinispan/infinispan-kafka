@@ -12,7 +12,7 @@
     <properties>
         <kafka.version>0.10.2.0</kafka.version>
         <junit.version>4.12</junit.version>
-        <infinispan.version>9.0.0.Final</infinispan.version>
+        <infinispan.version>9.0.1.Final</infinispan.version>
         <infinispan.protostream.version>4.0.0.Final</infinispan.protostream.version>
     </properties>
 
