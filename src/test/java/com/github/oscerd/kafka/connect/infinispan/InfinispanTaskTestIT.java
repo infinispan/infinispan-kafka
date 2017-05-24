@@ -97,6 +97,8 @@ public class InfinispanTaskTestIT {
 
 		infinispanSinkTask.put(Collections
 				.singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
+		infinispanSinkTask.put(Collections
+				.singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
 
 		RemoteCache<Object, Object> cache = cacheManager.getCache("default");
 		    

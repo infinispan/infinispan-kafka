@@ -25,7 +25,6 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
-import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
@@ -67,7 +66,6 @@ public class InfinispanSinkTask extends SinkTask {
 		while (it.hasNext()) {
 			SinkRecord record = (SinkRecord) it.next();
 			log.info("Record kafka coordinates:({}-{}-{}). Writing it to Infinispan...", record.topic(), record.key(), record.value());
-			defineCacheFlags();
 			ObjectMapper objectMapper = new ObjectMapper();
 			Class<?> marshaller = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLER_CLASS_CONF);
 			Object p = null;
@@ -82,19 +80,18 @@ public class InfinispanSinkTask extends SinkTask {
 			    Object returnValue = cache.put(record.key(), p);
 			    if (returnValue != null) {
 			        log.info("The put operation returned the following result: {}", returnValue);
-			    }
-			    } else {
-				    Object returnValue = cache.put(record.key(), record.value());
-				    if (returnValue != null) {
-				        log.info("The put operation returned the following result: {}", returnValue);
-				    }				
-			    }
+			    } 
+			} else {
+                Object returnValue = cache.put(record.key(), record.value());
+                if (returnValue != null) {
+                    log.info("The put operation returned the following result: {}", returnValue);
+	            }				
+			}
 		 }
 	}
 
 	@Override
 	public void flush(Map<TopicPartition, OffsetAndMetadata> map) {
-
 	}
 
 	@Override
@@ -112,7 +109,8 @@ public class InfinispanSinkTask extends SinkTask {
 			log.info("Adding protostream");
             builder.marshaller(new ProtoStreamMarshaller());
 		}
-				
+	    builder.forceReturnValues(config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_FORCE_RETURN_VALUES_CONF));
+	    
 		// Connect to the server
 		cacheManager = new RemoteCacheManager(builder.build());
 		if (useProto) {
@@ -127,7 +125,7 @@ public class InfinispanSinkTask extends SinkTask {
 						.addClass(marshaller)
 						.build(serCtx);
 			} catch (ProtoSchemaBuilderException | IOException e) {
-				log.error("Error during build of Protostream Schema {}", e.getMessage());
+				log.error("Error during building of Protostream Schema {}", e.getMessage());
 				e.printStackTrace();
 			}
 
@@ -136,18 +134,6 @@ public class InfinispanSinkTask extends SinkTask {
 			metadataCache.put("file.proto", memoSchemaFile);
 		}
 		cache = cacheManager.getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
-	}
-	
-	private void defineCacheFlags() {
-		if (config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_FORCE_RETURN_VALUES_CONF)) {
-           cache = cache.withFlags(Flag.FORCE_RETURN_VALUE);
-		}
-		if (config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_MAXIDLE_CONF)) {
-	       cache = cache.withFlags(Flag.DEFAULT_MAXIDLE);
-        }
-		if (config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_LIFESPAN_CONF)) {
-		   cache = cache.withFlags(Flag.DEFAULT_LIFESPAN);
-	    }
 	}
 
 }
