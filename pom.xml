@@ -270,8 +270,6 @@
                                     <skip>${skipTests}</skip>
                                     <executeCommands>
                                         <commands>
-                                            <!-- Separate cache for protobuf serialized objects. -->
-                                            <command>/subsystem=datagrid-infinispan/cache-container=local/local-cache=remote_query:add(configuration=default)</command>
                                         </commands>
                                     </executeCommands>
                                 </configuration>

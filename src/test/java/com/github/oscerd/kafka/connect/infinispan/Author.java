@@ -23,7 +23,4 @@ public class Author implements Serializable {
 	public String toString() {
 		return "Author [name=" + name + "]";
 	}
-	
-	
-
 }

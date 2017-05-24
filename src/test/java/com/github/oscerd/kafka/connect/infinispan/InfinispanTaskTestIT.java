@@ -16,6 +16,8 @@
  */
 package com.github.oscerd.kafka.connect.infinispan;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,12 +32,43 @@ import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.annotations.ProtoSchemaBuilder;
 import org.infinispan.protostream.annotations.ProtoSchemaBuilderException;
 import org.infinispan.query.remote.client.ProtobufMetadataManagerConstants;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class InfinispanTaskTestIT {
+	  private RemoteCacheManager cacheManager;
+	
+	@Before
+	public void setUp() {
+		ConfigurationBuilder builder = new ConfigurationBuilder().addServer().host("localhost").port(11222)
+				.marshaller(new ProtoStreamMarshaller());
+
+		cacheManager = new RemoteCacheManager(builder.build());
+
+		SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
+		ProtoSchemaBuilder protoSchemaBuilder = new ProtoSchemaBuilder();
+		String memoSchemaFile = null;
+		try {
+			memoSchemaFile = protoSchemaBuilder.fileName("file.proto").packageName("test").addClass(Author.class)
+					.build(serCtx);
+		} catch (ProtoSchemaBuilderException | IOException e) {
+			e.printStackTrace();
+		}
+
+		// register the schemas with the server too
+		RemoteCache<String, String> metadataCache = cacheManager
+				.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
+		metadataCache.put("file.proto", memoSchemaFile);
+	}
+
+	@After
+	public void tearDown() {
+		cacheManager.stop();
+	}
 
 	@Test
 	public void test() throws JsonProcessingException {
@@ -61,33 +94,9 @@ public class InfinispanTaskTestIT {
 
 		infinispanSinkTask.put(Collections
 				.singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
-		
-        ConfigurationBuilder builder = new ConfigurationBuilder()
-                .addServer()
-                .host("localhost")
-                .port(11222)
-                .marshaller(new ProtoStreamMarshaller());
 
-         RemoteCacheManager cacheManager = new RemoteCacheManager(builder.build());
-         
-			SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
-			ProtoSchemaBuilder protoSchemaBuilder = new ProtoSchemaBuilder();
-			String memoSchemaFile = null;
-			try {
-				memoSchemaFile = protoSchemaBuilder
-						.fileName("file.proto")
-						.packageName("test")
-						.addClass(Author.class)
-						.build(serCtx);
-			} catch (ProtoSchemaBuilderException | IOException e) {
-				e.printStackTrace();
-			}
-
-			// register the schemas with the server too
-			RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
-			metadataCache.put("file.proto", memoSchemaFile);
-		    RemoteCache<Object, Object> cache = cacheManager.getCache("default");
+		RemoteCache<Object, Object> cache = cacheManager.getCache("default");
 		    
-		    org.junit.Assert.assertEquals(cache.get("author").toString(), author.toString());
+		assertEquals(cache.get("author").toString(), author.toString());
 	}
 }
