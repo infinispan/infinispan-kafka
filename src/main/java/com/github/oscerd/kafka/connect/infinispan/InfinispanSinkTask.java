@@ -111,7 +111,6 @@ public class InfinispanSinkTask extends SinkTask {
 		}
 	    builder.forceReturnValues(config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_CACHE_FORCE_RETURN_VALUES_CONF));
 	    
-		// Connect to the server
 		cacheManager = new RemoteCacheManager(builder.build());
 		if (useProto) {
 			SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
@@ -129,7 +128,6 @@ public class InfinispanSinkTask extends SinkTask {
 				e.printStackTrace();
 			}
 
-			// register the schemas with the server too
 			RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
 			metadataCache.put("file.proto", memoSchemaFile);
 		}
