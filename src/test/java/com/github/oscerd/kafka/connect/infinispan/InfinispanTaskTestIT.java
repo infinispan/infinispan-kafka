@@ -74,7 +74,7 @@ public class InfinispanTaskTestIT {
 	}
 
 	@Test
-	public void test() throws JsonProcessingException {
+	public void testUseProto() throws JsonProcessingException {
 		Map<String, String> props = new HashMap<>();
 		props.put("infinispan.connection.hosts", "127.0.0.1");
 		props.put("infinispan.connection.hotrod.port", "11222");
@@ -84,6 +84,35 @@ public class InfinispanTaskTestIT {
 		props.put("infinispan.cache.lifespan.default", "false");
 		props.put("infinispan.use.proto", "true");
 		props.put("infinispan.proto.marshaller.class", "com.github.oscerd.kafka.connect.infinispan.Author");
+
+		InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
+		infinispanSinkTask.start(props);
+
+		final String topic = "atopic";
+
+		Author author = new Author();
+		author.setName("author");
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		infinispanSinkTask.put(Collections
+				.singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
+
+		RemoteCache<Object, Object> cache = cacheManager.getCache("default");
+		    
+		assertEquals(cache.get("author").toString(), author.toString());
+	}
+	
+	@Test
+	public void testNoProto() throws JsonProcessingException {
+		Map<String, String> props = new HashMap<>();
+		props.put("infinispan.connection.hosts", "127.0.0.1");
+		props.put("infinispan.connection.hotrod.port", "11222");
+		props.put("infinispan.connection.cache.name", "default");
+		props.put("infinispan.cache.force.return.values", "true");
+		props.put("infinispan.cache.maxidle.default", "false");
+		props.put("infinispan.cache.lifespan.default", "false");
+		props.put("infinispan.use.proto", "false");
 
 		InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
 		infinispanSinkTask.start(props);

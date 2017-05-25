@@ -52,7 +52,7 @@ public class InfinispanSinkTask extends SinkTask {
 	@Override
 	public void start(Map<String, String> map) {
 		config = new InfinispanSinkConnectorConfig(map);
-		setupInfinispan();
+		setupRemoteCache();
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class InfinispanSinkTask extends SinkTask {
 		cacheManager.stop();
 	}
 	
-	private void setupInfinispan() {
+	private void setupRemoteCache() {
 		ConfigurationBuilder builder = new ConfigurationBuilder();
 		builder.addServer()
 		        .host(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOSTS_CONF))
