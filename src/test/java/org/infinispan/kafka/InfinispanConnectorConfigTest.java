@@ -16,12 +16,11 @@
  */
 package org.infinispan.kafka;
 
-import org.infinispan.kafka.InfinispanSinkConnectorConfig;
 import org.junit.Test;
 
 public class InfinispanConnectorConfigTest {
-	@Test
-	public void doc() {
-		System.out.println(InfinispanSinkConnectorConfig.conf().toRst());
-	}
+   @Test
+   public void doc() {
+      System.out.println(InfinispanSinkConnectorConfig.conf().toRst());
+   }
 }

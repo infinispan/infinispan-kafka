@@ -28,7 +28,6 @@ import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
-import org.infinispan.kafka.InfinispanSinkTask;
 import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.annotations.ProtoSchemaBuilder;
 import org.infinispan.protostream.annotations.ProtoSchemaBuilderException;
@@ -43,93 +42,93 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class InfinispanTaskTestIT {
-    private static final Logger LOG = LoggerFactory.getLogger(InfinispanTaskTestIT.class);
-	private RemoteCacheManager cacheManager;
-	
-	@Before
-	public void setUp() {
-		ConfigurationBuilder builder = new ConfigurationBuilder().addServer().host("localhost").port(11222)
-				.marshaller(new ProtoStreamMarshaller());
+   private static final Logger LOG = LoggerFactory.getLogger(InfinispanTaskTestIT.class);
+   private RemoteCacheManager cacheManager;
 
-		cacheManager = new RemoteCacheManager(builder.build());
+   @Before
+   public void setUp() {
+      ConfigurationBuilder builder = new ConfigurationBuilder().addServer().host("localhost").port(11222)
+            .marshaller(new ProtoStreamMarshaller());
 
-		SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
-		ProtoSchemaBuilder protoSchemaBuilder = new ProtoSchemaBuilder();
-		String memoSchemaFile = null;
-		try {
-			memoSchemaFile = protoSchemaBuilder.fileName("file.proto").packageName("test").addClass(Author.class)
-					.build(serCtx);
-		} catch (ProtoSchemaBuilderException | IOException e) {
-			e.printStackTrace();
-		}
+      cacheManager = new RemoteCacheManager(builder.build());
 
-		// register the schemas with the server too
-		RemoteCache<String, String> metadataCache = cacheManager
-				.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
-		metadataCache.put("file.proto", memoSchemaFile);
-	}
+      SerializationContext serCtx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
+      ProtoSchemaBuilder protoSchemaBuilder = new ProtoSchemaBuilder();
+      String memoSchemaFile = null;
+      try {
+         memoSchemaFile = protoSchemaBuilder.fileName("file.proto").packageName("test").addClass(Author.class)
+               .build(serCtx);
+      } catch (ProtoSchemaBuilderException | IOException e) {
+         e.printStackTrace();
+      }
 
-	@After
-	public void tearDown() {
-		cacheManager.stop();
-	}
+      // register the schemas with the server too
+      RemoteCache<String, String> metadataCache = cacheManager
+            .getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
+      metadataCache.put("file.proto", memoSchemaFile);
+   }
 
-	@Test
-	public void testUseProto() throws JsonProcessingException {
-		Map<String, String> props = new HashMap<>();
-		props.put("infinispan.connection.hosts", "127.0.0.1");
-		props.put("infinispan.connection.hotrod.port", "11222");
-		props.put("infinispan.connection.cache.name", "default");
-		props.put("infinispan.cache.force.return.values", "true");
-		props.put("infinispan.cache.maxidle.default", "false");
-		props.put("infinispan.cache.lifespan.default", "false");
-		props.put("infinispan.use.proto", "true");
-		props.put("infinispan.proto.marshaller.class", "org.infinispan.kafka.Author");
+   @After
+   public void tearDown() {
+      cacheManager.stop();
+   }
 
-		InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
-		infinispanSinkTask.start(props);
+   @Test
+   public void testUseProto() throws JsonProcessingException {
+      Map<String, String> props = new HashMap<>();
+      props.put("infinispan.connection.hosts", "127.0.0.1");
+      props.put("infinispan.connection.hotrod.port", "11222");
+      props.put("infinispan.connection.cache.name", "default");
+      props.put("infinispan.cache.force.return.values", "true");
+      props.put("infinispan.cache.maxidle.default", "false");
+      props.put("infinispan.cache.lifespan.default", "false");
+      props.put("infinispan.use.proto", "true");
+      props.put("infinispan.proto.marshaller.class", "org.infinispan.kafka.Author");
 
-		final String topic = "atopic";
+      InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
+      infinispanSinkTask.start(props);
 
-		Author author = new Author();
-		author.setName("author");
+      final String topic = "atopic";
 
-		ObjectMapper mapper = new ObjectMapper();
+      Author author = new Author();
+      author.setName("author");
 
-		infinispanSinkTask.put(Collections
-				.singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
+      ObjectMapper mapper = new ObjectMapper();
 
-		RemoteCache<Object, Object> cache = cacheManager.getCache("default");
-		    
-		assertEquals(cache.get("author").toString(), author.toString());
-	}
-	
-	@Test
-	public void testNoProto() throws JsonProcessingException {
-		Map<String, String> props = new HashMap<>();
-		props.put("infinispan.connection.hosts", "127.0.0.1");
-		props.put("infinispan.connection.hotrod.port", "11222");
-		props.put("infinispan.connection.cache.name", "default");
-		props.put("infinispan.cache.force.return.values", "true");
-		props.put("infinispan.cache.maxidle.default", "false");
-		props.put("infinispan.cache.lifespan.default", "false");
-		props.put("infinispan.use.proto", "false");
+      infinispanSinkTask.put(Collections
+            .singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
 
-		InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
-		infinispanSinkTask.start(props);
+      RemoteCache<Object, Object> cache = cacheManager.getCache("default");
 
-		final String topic = "atopic";
+      assertEquals(cache.get("author").toString(), author.toString());
+   }
 
-		Author author = new Author();
-		author.setName("author");
+   @Test
+   public void testNoProto() throws JsonProcessingException {
+      Map<String, String> props = new HashMap<>();
+      props.put("infinispan.connection.hosts", "127.0.0.1");
+      props.put("infinispan.connection.hotrod.port", "11222");
+      props.put("infinispan.connection.cache.name", "default");
+      props.put("infinispan.cache.force.return.values", "true");
+      props.put("infinispan.cache.maxidle.default", "false");
+      props.put("infinispan.cache.lifespan.default", "false");
+      props.put("infinispan.use.proto", "false");
 
-		ObjectMapper mapper = new ObjectMapper();
+      InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
+      infinispanSinkTask.start(props);
 
-		infinispanSinkTask.put(Collections
-				.singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
+      final String topic = "atopic";
 
-		RemoteCache<Object, Object> cache = cacheManager.getCache("default");
-		    
-		assertEquals(cache.get("author").toString(), author.toString());
-	}
+      Author author = new Author();
+      author.setName("author");
+
+      ObjectMapper mapper = new ObjectMapper();
+
+      infinispanSinkTask.put(Collections
+            .singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
+
+      RemoteCache<Object, Object> cache = cacheManager.getCache("default");
+
+      assertEquals(cache.get("author").toString(), author.toString());
+   }
 }
