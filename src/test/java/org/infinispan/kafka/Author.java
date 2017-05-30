@@ -1,4 +1,4 @@
-package com.github.oscerd.kafka.connect.infinispan;
+package org.infinispan.kafka;
 
 import java.io.Serializable;
 

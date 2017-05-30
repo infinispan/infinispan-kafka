@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.oscerd.kafka.connect.infinispan;
+package org.infinispan.kafka;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,6 +28,7 @@ import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
+import org.infinispan.kafka.InfinispanSinkTask;
 import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.annotations.ProtoSchemaBuilder;
 import org.infinispan.protostream.annotations.ProtoSchemaBuilderException;
@@ -83,7 +84,7 @@ public class InfinispanTaskTestIT {
 		props.put("infinispan.cache.maxidle.default", "false");
 		props.put("infinispan.cache.lifespan.default", "false");
 		props.put("infinispan.use.proto", "true");
-		props.put("infinispan.proto.marshaller.class", "com.github.oscerd.kafka.connect.infinispan.Author");
+		props.put("infinispan.proto.marshaller.class", "org.infinispan.kafka.Author");
 
 		InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
 		infinispanSinkTask.start(props);

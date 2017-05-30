@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.oscerd.kafka.connect.infinispan;
+package org.infinispan.kafka;
 
+import org.infinispan.kafka.InfinispanSinkConnectorConfig;
 import org.junit.Test;
-
-import com.github.oscerd.kafka.connect.infinispan.InfinispanSinkConnectorConfig;
 
 public class InfinispanConnectorConfigTest {
 	@Test

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.oscerd.kafka.connect.infinispan;
+package org.infinispan.kafka;
 
 import java.io.IOException;
 import java.util.Collection;
