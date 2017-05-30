@@ -46,7 +46,7 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
    private static final String INFINISPAN_CACHE_FORCE_RETURN_VALUES_DOC = "By default, previously existing values for Map operations are not returned, if set to true the values will be returned";
 
    public static final String INFINISPAN_USE_PROTO_CONF = "infinispan.use.proto";
-   private static final String INFINISPAN_USE_PROTO_DOC = "If true, the Remote Cache Manager will be configured to use protobuf schemas";
+   private static final String INFINISPAN_USE_PROTO_DOC = "If true, the Remote Cache Manager will be configured to use protostream schemas";
 
    public static final String INFINISPAN_PROTO_MARSHALLER_CLASS_CONF = "infinispan.proto.marshaller.class";
    private static final String INFINISPAN_PROTO_MARSHALLER_CLASS_DOC = "If infinispan.use.proto is true, this option has to contain an annotated protostream class";
