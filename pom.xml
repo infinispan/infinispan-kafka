@@ -8,6 +8,82 @@
     <packaging>jar</packaging>
 
     <name>infinispan-kafka</name>
+    <description>Kafka Connector for Infinispan</description>
+    <url>http://infinispan.org</url>
+
+    <organization>
+        <name>JBoss, a division of Red Hat</name>
+        <url>http://www.jboss.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>placeholder</id>
+            <name>See http://infinispan.org for a complete list of contributors</name>
+        </developer>
+    </developers>
+
+    <mailingLists>
+        <mailingList>
+            <name>Infinispan Issues</name>
+            <subscribe>https://lists.jboss.org/mailman/listinfo/infinispan-issues</subscribe>
+            <unsubscribe>https://lists.jboss.org/mailman/listinfo/infinispan-issues</unsubscribe>
+            <post>infinispan-issues@lists.jboss.org</post>
+            <archive>http://lists.jboss.org/pipermail/infinispan-issues/</archive>
+        </mailingList>
+        <mailingList>
+            <name>Infinispan Developers</name>
+            <subscribe>https://lists.jboss.org/mailman/listinfo/infinispan-dev</subscribe>
+            <unsubscribe>https://lists.jboss.org/mailman/listinfo/infinispan-dev</unsubscribe>
+            <post>infinispan-dev@lists.jboss.org</post>
+            <archive>http://lists.jboss.org/pipermail/infinispan-dev/</archive>
+        </mailingList>
+    </mailingLists>
+
+    <scm>
+        <connection>scm:git:git@github.com:infinispan/infinispan-kafka.git</connection>
+        <developerConnection>scm:git:git@github.com:infinispan/infinispan-kafka.git</developerConnection>
+        <url>https://github.com/infinispan/infinispan-kafka</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>jira</system>
+        <url>https://issues.jboss.org/browse/ISPN</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>TeamCity</system>
+        <url>http://ci.infinispan.org</url>
+        <notifiers>
+            <notifier>
+                <type>mail</type>
+                <address>infinispan-commits@lists.jboss.org</address>
+            </notifier>
+        </notifiers>
+    </ciManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>jboss-releases-repository</id>
+            <name>JBoss Release Repository</name>
+            <url>${jboss.releases.repo.url}</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>jboss-snapshots-repository</id>
+            <name>JBoss Snapshot Repository</name>
+            <url>${jboss.snapshots.repo.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <kafka.version>0.10.2.1</kafka.version>
@@ -16,7 +92,43 @@
         <infinispan.protostream.version>4.0.0.Final</infinispan.protostream.version>
         <jackson.version>2.8.8</jackson.version>
         <log4j2.version>2.8.2</log4j2.version>
+        <version.maven.compiler>3.1</version.maven.compiler>
+        <version.maven.source>2.2.1</version.maven.source>
+        <version.maven.resources>2.6</version.maven.resources>
+        <version.maven.surefire>2.18.1</version.maven.surefire>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -124,7 +236,7 @@
     </dependencies>
 
     <build>
-        <plugins>
+            <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -165,14 +277,9 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+            </plugins>
     </build>
+
     <profiles>
         <profile>
             <id>jdk8-test</id>
