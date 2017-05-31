@@ -60,7 +60,7 @@ public class Author implements Serializable {
 }
 ```
 
-You can then define the following configuration for you Infinispan Sink Connector
+You can then define the following configuration for your Infinispan Sink Connector
 
 ```txt
 name=InfinispanSinkConnector
