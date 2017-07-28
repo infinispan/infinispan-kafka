@@ -60,6 +60,7 @@ public class InfinispanSinkTask extends SinkTask {
       if (collection.isEmpty()) {
          return;
       }
+      boolean useProto = config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_USE_PROTO_CONF);
       final int recordsCount = collection.size();
       log.info("Received {} records", recordsCount);
       Iterator it = collection.iterator();
@@ -67,27 +68,7 @@ public class InfinispanSinkTask extends SinkTask {
          SinkRecord record = (SinkRecord) it.next();
          log.info("Record kafka coordinates:({}-{}-{}). Writing it to Infinispan...", record.topic(), record.key(),
                record.value());
-         ObjectMapper objectMapper = new ObjectMapper();
-         Class<?> marshaller = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLER_CLASS_CONF);
-         Object p = null;
-         boolean useProto = config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_USE_PROTO_CONF);
-         if (useProto) {
-            try {
-               p = objectMapper.readValue((String) record.value(), marshaller);
-            } catch (IOException e) {
-               log.error("Error during Deserialization of value {}", e.getMessage());
-               e.printStackTrace();
-            }
-            Object returnValue = cache.put(record.key(), p);
-            if (returnValue != null) {
-               log.info("The put operation returned the following result: {}", returnValue);
-            }
-         } else {
-            Object returnValue = cache.put(record.key(), record.value());
-            if (returnValue != null) {
-               log.info("The put operation returned the following result: {}", returnValue);
-            }
-         }
+         storeEntry(useProto, record);
       }
    }
 
@@ -132,6 +113,29 @@ public class InfinispanSinkTask extends SinkTask {
       }
       cache = cacheManager
             .getCache(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_CACHE_NAME_CONF));
+   }
+   
+   private void storeEntry(boolean useProto, SinkRecord record) {
+       ObjectMapper objectMapper = new ObjectMapper();
+       Class<?> marshaller = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLER_CLASS_CONF);
+       Object p = null;
+       if (useProto) {
+           try {
+              p = objectMapper.readValue((String) record.value(), marshaller);
+           } catch (IOException e) {
+              log.error("Error during Deserialization of value {}", e.getMessage());
+              e.printStackTrace();
+           }
+           Object returnValue = cache.put(record.key(), p);
+           if (returnValue != null) {
+              log.info("The put operation returned the following result: {}", returnValue);
+           }
+        } else {
+           Object returnValue = cache.put(record.key(), record.value());
+           if (returnValue != null) {
+              log.info("The put operation returned the following result: {}", returnValue);
+           }
+        }
    }
 
 }
