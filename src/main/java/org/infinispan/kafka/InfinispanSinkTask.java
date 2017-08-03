@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
@@ -118,6 +119,10 @@ public class InfinispanSinkTask extends SinkTask {
    private void storeEntry(boolean useProto, SinkRecord record) {
        ObjectMapper objectMapper = new ObjectMapper();
        Class<?> marshaller = config.getClass(InfinispanSinkConnectorConfig.INFINISPAN_PROTO_MARSHALLER_CLASS_CONF);
+       boolean useLifespan = config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_USE_LIFESPAN_CONF);
+       boolean useMaxIdle = config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_USE_MAX_IDLE_CONF);
+	   long lifespan = config.getLong(InfinispanSinkConnectorConfig.INFINISPAN_LIFESPAN_ENTRY_CONF);
+	   long maxIdle = config.getLong(InfinispanSinkConnectorConfig.INFINISPAN_MAX_IDLE_ENTRY_CONF);
        Object p = null;
        if (useProto) {
            try {
@@ -126,12 +131,26 @@ public class InfinispanSinkTask extends SinkTask {
               log.error("Error during Deserialization of value {}", e.getMessage());
               e.printStackTrace();
            }
-           Object returnValue = cache.put(record.key(), p);
+           Object returnValue;
+           if (!useLifespan && !useMaxIdle) {
+               returnValue = cache.put(record.key(), p);
+           } else if (useLifespan && !useMaxIdle) {
+        	   returnValue = cache.put(record.key(), p, lifespan, TimeUnit.SECONDS);
+           } else {
+        	   returnValue = cache.put(record.key(), p, lifespan, TimeUnit.SECONDS, maxIdle, TimeUnit.SECONDS);       	   
+           }
            if (returnValue != null) {
               log.info("The put operation returned the following result: {}", returnValue);
            }
         } else {
-           Object returnValue = cache.put(record.key(), record.value());
+            Object returnValue;
+            if (!useLifespan && !useMaxIdle) {
+                returnValue = cache.put(record.key(), record.value());
+            } else if (useLifespan && !useMaxIdle) {
+         	   returnValue = cache.put(record.key(), record.value(), lifespan, TimeUnit.SECONDS);
+            } else {
+         	   returnValue = cache.put(record.key(), record.value(), lifespan, TimeUnit.SECONDS, maxIdle, TimeUnit.SECONDS);       	   
+            }
            if (returnValue != null) {
               log.info("The put operation returned the following result: {}", returnValue);
            }

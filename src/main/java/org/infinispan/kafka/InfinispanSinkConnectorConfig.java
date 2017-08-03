@@ -32,6 +32,10 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
    public static final Boolean INFINISPAN_CACHE_FORCE_RETURN_VALUES_DEFAULT = false;
    public static final Boolean INFINISPAN_USE_PROTO_DEFAULT = false;
    public static final Class INFINISPAN_PROTO_MARSHALLER_CLASS_DEFAULT = String.class;
+   public static final Boolean INFINISPAN_USE_LIFESPAN_DEFAULT = false;
+   public static final Boolean INFINISPAN_USE_MAX_IDLE_DEFAULT = false;
+   public static final long INFINISPAN_LIFESPAN_ENTRY_DEFAULT = 0L;
+   public static final long INFINISPAN_MAX_IDLE_ENTRY_DEFAULT = 0L;
 
    public static final String INFINISPAN_CONNECTION_HOSTS_CONF = "infinispan.connection.hosts";
    private static final String INFINISPAN_CONNECTION_HOSTS_DOC = "The infinispan connection hosts";
@@ -50,6 +54,18 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
 
    public static final String INFINISPAN_PROTO_MARSHALLER_CLASS_CONF = "infinispan.proto.marshaller.class";
    private static final String INFINISPAN_PROTO_MARSHALLER_CLASS_DOC = "If infinispan.use.proto is true, this option has to contain an annotated protostream class";
+   
+   public static final String INFINISPAN_USE_LIFESPAN_CONF = "infinispan.use.lifespan";
+   private static final String INFINISPAN_USE_LIFESPAN_DOC = "If true, the Remote Cache Manager will be configured to use Lifespan associated to cache entries";
+   
+   public static final String INFINISPAN_LIFESPAN_ENTRY_CONF = "infinispan.cache.lifespan.entry";
+   private static final String INFINISPAN_LIFESPAN_ENTRY_DOC = "If infinispan.use.lifespan is true, this option has to the lifespan associated with the entries to be stored (in seconds)";
+   
+   public static final String INFINISPAN_USE_MAX_IDLE_CONF = "infinispan.use.maxidle";
+   private static final String INFINISPAN_USE_MAX_IDLE_DOC = "If true, the Remote Cache Manager will be configured to use Max idle value associated to cache entries";
+   
+   public static final String INFINISPAN_MAX_IDLE_ENTRY_CONF = "infinispan.cache.maxidle.entry";
+   private static final String INFINISPAN_MAX_IDLE_ENTRY_DOC = "If infinispan.use.maxidle is true, this option has to the max idle associated with the entries to be stored (in seconds)";
 
    public InfinispanSinkConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
       super(config, parsedConfig);
@@ -73,6 +89,14 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
                   Importance.MEDIUM, INFINISPAN_PROTO_MARSHALLER_CLASS_DOC)
             .define(INFINISPAN_CACHE_FORCE_RETURN_VALUES_CONF, Type.BOOLEAN,
                   INFINISPAN_CACHE_FORCE_RETURN_VALUES_DEFAULT, Importance.LOW,
-                  INFINISPAN_CACHE_FORCE_RETURN_VALUES_DOC);
+                  INFINISPAN_CACHE_FORCE_RETURN_VALUES_DOC)
+            .define(INFINISPAN_USE_LIFESPAN_CONF, Type.BOOLEAN, INFINISPAN_USE_LIFESPAN_DEFAULT,
+                    Importance.LOW, INFINISPAN_USE_LIFESPAN_DOC)
+            .define(INFINISPAN_USE_MAX_IDLE_CONF, Type.BOOLEAN, INFINISPAN_USE_MAX_IDLE_DEFAULT,
+                    Importance.LOW, INFINISPAN_USE_MAX_IDLE_DOC)
+            .define(INFINISPAN_LIFESPAN_ENTRY_CONF, Type.LONG, INFINISPAN_LIFESPAN_ENTRY_DEFAULT,
+                    Importance.LOW, INFINISPAN_LIFESPAN_ENTRY_DOC)
+            .define(INFINISPAN_MAX_IDLE_ENTRY_CONF, Type.LONG, INFINISPAN_MAX_IDLE_ENTRY_DEFAULT,
+                    Importance.LOW, INFINISPAN_MAX_IDLE_ENTRY_DOC);
    }
 }

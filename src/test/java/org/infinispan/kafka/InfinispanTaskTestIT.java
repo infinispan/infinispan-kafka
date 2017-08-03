@@ -17,6 +17,7 @@
 package org.infinispan.kafka;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -130,5 +131,74 @@ public class InfinispanTaskTestIT {
       RemoteCache<Object, Object> cache = cacheManager.getCache("default");
 
       assertEquals(cache.get("author").toString(), author.toString());
+   }
+   
+   @Test
+   public void testLifespanAndProto() throws JsonProcessingException, InterruptedException {
+      Map<String, String> props = new HashMap<>();
+      props.put("infinispan.connection.hosts", "127.0.0.1");
+      props.put("infinispan.connection.hotrod.port", "11222");
+      props.put("infinispan.connection.cache.name", "default");
+      props.put("infinispan.cache.force.return.values", "true");
+      props.put("infinispan.cache.maxidle.default", "false");
+      props.put("infinispan.cache.lifespan.default", "false");
+      props.put("infinispan.use.proto", "true");
+      props.put("infinispan.proto.marshaller.class", "org.infinispan.kafka.Author");
+      props.put("infinispan.use.lifespan", "true");
+      props.put("infinispan.cache.lifespan.entry", "10");
+
+      InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
+      infinispanSinkTask.start(props);
+
+      final String topic = "atopic";
+
+      Author author = new Author();
+      author.setName("author");
+
+      ObjectMapper mapper = new ObjectMapper();
+
+      infinispanSinkTask.put(Collections
+            .singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
+
+      RemoteCache<Object, Object> cache = cacheManager.getCache("default");
+
+      assertEquals(cache.get("author").toString(), author.toString());
+      Thread.sleep(10000);
+      assertNull(cache.get("author"));
+   }
+   
+   @Test
+   public void testLifespanMaxIdleAndProto() throws JsonProcessingException, InterruptedException {
+      Map<String, String> props = new HashMap<>();
+      props.put("infinispan.connection.hosts", "127.0.0.1");
+      props.put("infinispan.connection.hotrod.port", "11222");
+      props.put("infinispan.connection.cache.name", "default");
+      props.put("infinispan.cache.force.return.values", "true");
+      props.put("infinispan.cache.maxidle.default", "false");
+      props.put("infinispan.cache.lifespan.default", "false");
+      props.put("infinispan.use.proto", "true");
+      props.put("infinispan.proto.marshaller.class", "org.infinispan.kafka.Author");
+      props.put("infinispan.use.lifespan", "true");
+      props.put("infinispan.cache.lifespan.entry", "20");
+      props.put("infinispan.use.maxidle", "true");
+      props.put("infinispan.cache.maxidle.entry", "10");
+
+      InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
+      infinispanSinkTask.start(props);
+
+      final String topic = "atopic";
+
+      Author author = new Author();
+      author.setName("author");
+
+      ObjectMapper mapper = new ObjectMapper();
+
+      infinispanSinkTask.put(Collections
+            .singleton(new SinkRecord(topic, 1, null, "author", null, mapper.writeValueAsString(author), 42)));
+
+      RemoteCache<Object, Object> cache = cacheManager.getCache("default");
+
+      Thread.sleep(10000);
+      assertNull(cache.get("author"));
    }
 }
