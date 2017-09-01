@@ -14,7 +14,7 @@ $KAFKA_HOME/bin/connect-standalone $KAFKA_HOME/config/connect-standalone.propert
 
 ## Status
 
-- Actually only the Sink Connector (from Kafka to Infinispan) has been developed and still need work.
+- Currently only the Sink Connector (from Kafka to Infinispan) has been developed and still need work.
 
 ## Sink Connector Properties
 
