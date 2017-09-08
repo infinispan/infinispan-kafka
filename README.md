@@ -149,5 +149,3 @@ In your Infinispan default cache you should now have a key/value pair with key1 
 * Run ```mvn release:prepare release:perform -B```
 
 
-```
-
