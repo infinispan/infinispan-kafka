@@ -127,3 +127,27 @@ public class SimpleProducer {
 ```
 
 In your Infinispan default cache you should now have a key/value pair with key1 as key and an Author object as value.
+
+## Releasing
+
+* Make sure your pub key is stored on github;
+* MAVEN_HOME/conf/settings.xml must contain credentials for the release repository. Add the following section in ```<servers>```:
+
+```xml
+<server>
+   <id>jboss-snapshots-repository</id>
+   <username>RELEASE_USER</username>
+   <password>RELEASE_PASS</password>
+</server>
+<server>
+   <id>jboss-releases-repository</id>
+   <username>RELEASE_USER</username>
+   <password>RELEASE_PASS</password>
+</server>
+```
+
+* Run ```mvn release:prepare release:perform -B```
+
+
+```
+
