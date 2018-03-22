@@ -59,7 +59,7 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
    private static final String INFINISPAN_USE_LIFESPAN_DOC = "If true, the Remote Cache Manager will be configured to use Lifespan associated to cache entries";
    
    public static final String INFINISPAN_LIFESPAN_ENTRY_CONF = "infinispan.cache.lifespan.entry";
-   private static final String INFINISPAN_LIFESPAN_ENTRY_DOC = "If infinispan.use.lifespan is true, this option has to the lifespan associated with the entries to be stored (in seconds)";
+   private static final String INFINISPAN_LIFESPAN_ENTRY_DOC = "If infinispan.use.lifespan is true, this option has to be the lifespan associated with the entries to be stored (in seconds)";
    
    public static final String INFINISPAN_USE_MAX_IDLE_CONF = "infinispan.use.maxidle";
    private static final String INFINISPAN_USE_MAX_IDLE_DOC = "If true, the Remote Cache Manager will be configured to use Max idle value associated to cache entries";
