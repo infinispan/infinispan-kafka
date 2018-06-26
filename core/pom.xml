@@ -193,41 +193,31 @@
                 <server.dir.name>infinispan-server-${infinispan.version}</server.dir.name>
                 <server.dir>${server.dir.parent}/${server.dir.name}</server.dir>
             </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.infinispan.server</groupId>
-                    <artifactId>infinispan-server</artifactId>
-                    <version>${infinispan.version}</version>
-                    <type>zip</type>
-                    <classifier>bin</classifier>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
+                <plugin>
+	            <groupId>com.googlecode.maven-download-plugin</groupId>
+	            <artifactId>download-maven-plugin</artifactId>
+	            <version>1.4.0</version>
+	                <executions>
+		            <execution>
+			        <id>download-infinispan-server</id>
+			        <phase>pre-integration-test</phase>
+			        <goals>
+				    <goal>wget</goal>
+			        </goals>
+			        <configuration>
+				    <url>http://downloads.jboss.org/infinispan/${infinispan.version}/infinispan-server-${infinispan.version}.zip</url>
+				    <unpack>true</unpack>
+				    <outputDirectory>${server.dir.parent}</outputDirectory>
+			        </configuration>
+		            </execution>
+	                </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>unpack-server</id>
-                                <phase>generate-test-resources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.infinispan.server</groupId>
-                                            <artifactId>infinispan-server</artifactId>
-                                            <version>${infinispan.version}</version>
-                                            <classifier>bin</classifier>
-                                            <type>zip</type>
-                                            <outputDirectory>${server.dir.parent}</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
                             <execution>
                                 <id>deploy-converter-factory</id>
                                 <phase>generate-test-resources</phase>
