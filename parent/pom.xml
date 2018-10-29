@@ -48,8 +48,8 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:git:git@github.com:infinispan/infinispan-kafka.git</connection>
-        <developerConnection>scm:git:git@github.com:infinispan/infinispan-kafka.git</developerConnection>
+        <connection>scm:git:https://github.com/infinispan/infinispan-kafka.git</connection>
+        <developerConnection>scm:git:https://github.com/infinispan/infinispan-kafka.git</developerConnection>
         <url>https://github.com/infinispan/infinispan-kafka</url>
         <tag>HEAD</tag>
     </scm>

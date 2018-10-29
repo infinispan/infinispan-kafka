@@ -130,8 +130,7 @@ In your Infinispan default cache you should now have a key/value pair with key1 
 
 ## Releasing
 
-* Make sure your pub key is stored on github;
-* MAVEN_HOME/conf/settings.xml must contain credentials for the release repository. Add the following section in ```<servers>```:
+Make sure ``` MAVEN_HOME/conf/settings.xml``` contains credentials for the release repository. Add the following section in ```<servers>```:
 
 ```xml
 <server>
