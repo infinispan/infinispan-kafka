@@ -105,6 +105,7 @@
         <version.maven.resources>3.0.1</version.maven.resources>
         <version.maven.antrun>1.8</version.maven.antrun>
         <version.maven.nexus-staging>1.6.7</version.maven.nexus-staging>
+        <version.maven.buildhelper>1.12</version.maven.buildhelper>
     </properties>
 
     <repositories>
