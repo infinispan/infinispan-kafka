@@ -85,7 +85,6 @@ public class InfinispanSinkTask extends SinkTask {
 
    private void setupRemoteCache() {
 	  String version = config.getString(InfinispanSinkConnectorConfig.INFINISPAN_HOTROD_PROTOCOL_VERSION_CONF);
-      System.err.println(version);
 	  ConfigurationBuilder builder = new ConfigurationBuilder();
       builder.addServer()
             .host(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOSTS_CONF))
