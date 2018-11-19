@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.kafka.connect.sink.SinkRecord;
+import org.infinispan.client.hotrod.ProtocolVersion;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
@@ -103,7 +104,7 @@ public class InfinispanTaskTestIT {
 
       assertEquals(cache.get("author").toString(), author.toString());
    }
-
+   
    @Test
    public void testNoProto() throws JsonProcessingException {
       Map<String, String> props = new HashMap<>();
@@ -114,6 +115,7 @@ public class InfinispanTaskTestIT {
       props.put("infinispan.cache.maxidle.default", "false");
       props.put("infinispan.cache.lifespan.default", "false");
       props.put("infinispan.use.proto", "false");
+      props.put("infinispan.hotrod.protocol.version", "PROTOCOL_VERSION_29");
 
       InfinispanSinkTask infinispanSinkTask = new InfinispanSinkTask();
       infinispanSinkTask.start(props);
