@@ -26,6 +26,7 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
+import org.infinispan.client.hotrod.ProtocolVersion;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
@@ -83,9 +84,13 @@ public class InfinispanSinkTask extends SinkTask {
    }
 
    private void setupRemoteCache() {
-      ConfigurationBuilder builder = new ConfigurationBuilder();
-      builder.addServer().host(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOSTS_CONF))
-            .port(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOTROD_PORT_CONF));
+	  String version = config.getString(InfinispanSinkConnectorConfig.INFINISPAN_HOTROD_PROTOCOL_VERSION_CONF);
+      System.err.println(version);
+	  ConfigurationBuilder builder = new ConfigurationBuilder();
+      builder.addServer()
+            .host(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOSTS_CONF))
+            .port(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOTROD_PORT_CONF))
+            .version(ProtocolVersion.valueOf(version));
       boolean useProto = config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_USE_PROTO_CONF);
       if (useProto) {
          log.info("Adding protostream");

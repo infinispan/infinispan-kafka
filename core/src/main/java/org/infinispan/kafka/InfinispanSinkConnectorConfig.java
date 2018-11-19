@@ -22,6 +22,7 @@ import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Importance;
 import org.apache.kafka.common.config.ConfigDef.Type;
+import org.infinispan.client.hotrod.ProtocolVersion;
 import org.infinispan.client.hotrod.impl.ConfigurationProperties;
 
 public class InfinispanSinkConnectorConfig extends AbstractConfig {
@@ -36,6 +37,7 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
    public static final Boolean INFINISPAN_USE_MAX_IDLE_DEFAULT = false;
    public static final long INFINISPAN_LIFESPAN_ENTRY_DEFAULT = 0L;
    public static final long INFINISPAN_MAX_IDLE_ENTRY_DEFAULT = 0L;
+   public static final String INFINISPAN_HOTROD_PROTOCOL_VERSION_DEFAULT = ProtocolVersion.DEFAULT_PROTOCOL_VERSION.name();
 
    public static final String INFINISPAN_CONNECTION_HOSTS_CONF = "infinispan.connection.hosts";
    private static final String INFINISPAN_CONNECTION_HOSTS_DOC = "The infinispan connection hosts";
@@ -66,6 +68,9 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
    
    public static final String INFINISPAN_MAX_IDLE_ENTRY_CONF = "infinispan.cache.maxidle.entry";
    private static final String INFINISPAN_MAX_IDLE_ENTRY_DOC = "If infinispan.use.maxidle is true, this option has to the max idle associated with the entries to be stored (in seconds)";
+   
+   public static final String INFINISPAN_HOTROD_PROTOCOL_VERSION_CONF = "infinispan.hotrod.protocol.version";
+   private static final String INFINISPAN_HOTROD_PROTOCOL_VERSION_DOC = "The infinispan hotrod client protocol version to use";
 
    public InfinispanSinkConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
       super(config, parsedConfig);
@@ -97,6 +102,8 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
             .define(INFINISPAN_LIFESPAN_ENTRY_CONF, Type.LONG, INFINISPAN_LIFESPAN_ENTRY_DEFAULT,
                     Importance.LOW, INFINISPAN_LIFESPAN_ENTRY_DOC)
             .define(INFINISPAN_MAX_IDLE_ENTRY_CONF, Type.LONG, INFINISPAN_MAX_IDLE_ENTRY_DEFAULT,
-                    Importance.LOW, INFINISPAN_MAX_IDLE_ENTRY_DOC);
+                    Importance.LOW, INFINISPAN_MAX_IDLE_ENTRY_DOC)
+            .define(INFINISPAN_HOTROD_PROTOCOL_VERSION_CONF, Type.STRING, INFINISPAN_HOTROD_PROTOCOL_VERSION_DEFAULT,
+                    Importance.LOW, INFINISPAN_HOTROD_PROTOCOL_VERSION_DOC);
    }
 }
