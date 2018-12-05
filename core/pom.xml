@@ -111,6 +111,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>${version.maven.jar}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -284,6 +285,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${version.maven.failsafe}</version>
                         <executions>
                             <execution>
                                 <goals>
