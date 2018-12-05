@@ -285,6 +285,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${version.maven.failsafe}</version>
                         <executions>
                             <execution>
                                 <goals>
