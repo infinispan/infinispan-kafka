@@ -111,6 +111,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>${version.maven.jar}</version>
                 <configuration>
                     <archive>
                         <manifest>
