@@ -91,7 +91,7 @@
         <jboss.snapshots.repo.id>jboss-snapshots-repository</jboss.snapshots.repo.id>
         <jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>
 
-        <kafka.version>2.1.0</kafka.version>
+        <kafka.version>2.1.1</kafka.version>
         <junit.version>4.12</junit.version>
         <infinispan.version>9.4.7.Final</infinispan.version>
         <infinispan.protostream.version>4.2.2.Final</infinispan.protostream.version>
