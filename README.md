@@ -8,7 +8,16 @@ This is a Kafka Connector to connect to an Infinispan instance (domain or standa
 
 ```
 mvn clean package
+```
+
+then in core folder
+
+```
 export CLASSPATH="$(find target/ -type f -name '*.jar'| grep '\-package' | tr '\n' ':')"
+```
+and you're now able to run from top folder
+
+```
 $KAFKA_HOME/bin/connect-standalone $KAFKA_HOME/config/connect-standalone.properties config/InfinispanSinkConnector.properties
 ```
 
