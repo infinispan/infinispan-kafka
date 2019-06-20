@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.infinispan.kafka</groupId>
         <artifactId>parent</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
         <relativePath>parent/pom.xml</relativePath>
     </parent>
 
@@ -22,7 +22,7 @@
         <connection>scm:git:git@github.com:infinispan/infinispan-kafka.git</connection>
         <developerConnection>scm:git:git@github.com:infinispan/infinispan-kafka.git</developerConnection>
         <url>https://github.com/infinispan/infinispan-kafka</url>
-      <tag>HEAD</tag>
+      <tag>0.5</tag>
   </scm>
 
     <modules>
