@@ -68,6 +68,10 @@ public class InfinispanTaskTestIT {
       RemoteCache<String, String> metadataCache = cacheManager
             .getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
       metadataCache.put("file.proto", memoSchemaFile);
+      
+      cacheManager.getCache("default");
+      
+      cacheManager.administration().getOrCreateCache("default", (String) null);
    }
 
    @After

@@ -50,9 +50,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.infinispan.server</groupId>
-            <artifactId>infinispan-server-testsuite</artifactId>
-            <classifier>tests</classifier>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-server-runtime</artifactId>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -228,9 +227,8 @@
                                 <configuration>
                                     <artifactItems>
                                         <artifactItem>
-                                            <groupId>org.infinispan.server</groupId>
-                                            <artifactId>infinispan-server-testsuite</artifactId>
-                                            <classifier>tests</classifier>
+                                            <groupId>org.infinispan</groupId>
+                                            <artifactId>infinispan-server-runtime</artifactId>
                                             <version>${infinispan.version}</version>
                                             <outputDirectory>${server.dir}/standalone/deployments</outputDirectory>
                                         </artifactItem>
@@ -240,47 +238,26 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.wildfly.plugins</groupId>
-                        <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>1.1.0.Alpha6</version>
-                        <executions>
-                            <execution>
-                                <id>start-server</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>start</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>${skipTests}</skip>
-                                    <jbossHome>${server.dir}</jbossHome>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>configure-caches</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>execute-commands</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>${skipTests}</skip>
-                                    <executeCommands>
-                                        <commands>
-                                        </commands>
-                                    </executeCommands>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop-server</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>shutdown</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>${skipTests}</skip>
-                                    <jbossHome>${server.dir}</jbossHome>
-                                </configuration>
-                            </execution>
-                        </executions>
+                       <groupId>com.bazaarvoice.maven.plugins</groupId>
+                       <artifactId>process-exec-maven-plugin</artifactId>
+                       <version>0.9</version>
+                           <executions>
+                           <!-- Start process -->
+                               <execution>
+                                   <id>infinispan-server</id>
+                                   <phase>pre-integration-test</phase>
+                                   <goals>
+                                        <goal>start</goal>
+                                   </goals>
+                                   <configuration>
+                                        <name>infinispan-server</name>
+                                        <workingDir>${server.dir}/bin/</workingDir>
+                                        <arguments>
+                                             <argument>./server.sh</argument>
+                                        </arguments>
+                                   </configuration>
+                               </execution>
+                          </executions> 
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
