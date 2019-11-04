@@ -93,7 +93,7 @@
 
         <kafka.version>2.3.1</kafka.version>
         <junit.version>4.12</junit.version>
-        <infinispan.version>10.0.0.Final</infinispan.version>
+        <infinispan.version>10.0.1.Final</infinispan.version>
         <infinispan.protostream.version>4.3.0.Final</infinispan.protostream.version>
         <jackson.version>2.10.0</jackson.version>
         <log4j2.version>2.12.1</log4j2.version>
