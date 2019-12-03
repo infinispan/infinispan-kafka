@@ -89,6 +89,9 @@ public class InfinispanSinkTask extends SinkTask {
       builder.addServer()
             .host(config.getString(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOSTS_CONF))
             .port(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_CONNECTION_HOTROD_PORT_CONF))
+            .socketTimeout(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_HOTROD_SOCKET_TIMEOUT_CONF))
+            .connectionTimeout(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_HOTROD_CONNECT_TIMEOUT_CONF))
+            .maxRetries(config.getInt(InfinispanSinkConnectorConfig.INFINISPAN_HOTROD_MAX_RETRIES_CONF))
             .version(ProtocolVersion.valueOf(version));
       boolean useProto = config.getBoolean(InfinispanSinkConnectorConfig.INFINISPAN_USE_PROTO_CONF);
       if (useProto) {
