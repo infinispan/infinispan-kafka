@@ -38,6 +38,9 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
    public static final long INFINISPAN_LIFESPAN_ENTRY_DEFAULT = 0L;
    public static final long INFINISPAN_MAX_IDLE_ENTRY_DEFAULT = 0L;
    public static final String INFINISPAN_HOTROD_PROTOCOL_VERSION_DEFAULT = ProtocolVersion.DEFAULT_PROTOCOL_VERSION.name();
+   public static final int INFINISPAN_HOTROD_SOCKET_TIMEOUT_DEFAULT = 5000;
+   public static final int INFINISPAN_HOTROD_CONNECT_TIMEOUT_DEFAULT = 5000;
+   public static final int INFINISPAN_HOTROD_MAX_RETRIES_DEFAULT = 5;
 
    public static final String INFINISPAN_CONNECTION_HOSTS_CONF = "infinispan.connection.hosts";
    private static final String INFINISPAN_CONNECTION_HOSTS_DOC = "The infinispan connection hosts";
@@ -72,6 +75,15 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
    public static final String INFINISPAN_HOTROD_PROTOCOL_VERSION_CONF = "infinispan.hotrod.protocol.version";
    private static final String INFINISPAN_HOTROD_PROTOCOL_VERSION_DOC = "The infinispan hotrod client protocol version to use";
 
+   public static final String INFINISPAN_HOTROD_SOCKET_TIMEOUT_CONF = "infinispan.hotrod.socket_timeout";
+   private static final String INFINISPAN_HOTROD_SOCKET_TIMEOUT_DOC = "The infinispan hotrod client timeout for socket read/writes";
+
+   public static final String INFINISPAN_HOTROD_CONNECT_TIMEOUT_CONF = "infinispan.hotrod.connect_timeout";
+   private static final String INFINISPAN_HOTROD_CONNECT_TIMEOUT_DOC = "The infinispan hotrod client timeout for connections";
+
+   public static final String INFINISPAN_HOTROD_MAX_RETRIES_CONF = "infinispan.hotrod.max_retries";
+   private static final String INFINISPAN_HOTROD_MAX_RETRIES_DOC = "The infinispan hotrod client maximum number of operation retries";
+
    public InfinispanSinkConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
       super(config, parsedConfig);
    }
@@ -104,6 +116,12 @@ public class InfinispanSinkConnectorConfig extends AbstractConfig {
             .define(INFINISPAN_MAX_IDLE_ENTRY_CONF, Type.LONG, INFINISPAN_MAX_IDLE_ENTRY_DEFAULT,
                     Importance.LOW, INFINISPAN_MAX_IDLE_ENTRY_DOC)
             .define(INFINISPAN_HOTROD_PROTOCOL_VERSION_CONF, Type.STRING, INFINISPAN_HOTROD_PROTOCOL_VERSION_DEFAULT,
-                    Importance.LOW, INFINISPAN_HOTROD_PROTOCOL_VERSION_DOC);
+                    Importance.LOW, INFINISPAN_HOTROD_PROTOCOL_VERSION_DOC)
+            .define(INFINISPAN_HOTROD_SOCKET_TIMEOUT_CONF, Type.INT, INFINISPAN_HOTROD_SOCKET_TIMEOUT_DEFAULT,
+                    Importance.LOW, INFINISPAN_HOTROD_SOCKET_TIMEOUT_DOC)
+            .define(INFINISPAN_HOTROD_CONNECT_TIMEOUT_CONF, Type.INT, INFINISPAN_HOTROD_CONNECT_TIMEOUT_DEFAULT,
+                    Importance.LOW, INFINISPAN_HOTROD_CONNECT_TIMEOUT_DOC)
+            .define(INFINISPAN_HOTROD_MAX_RETRIES_CONF, Type.INT, INFINISPAN_HOTROD_MAX_RETRIES_DEFAULT,
+                    Importance.LOW, INFINISPAN_HOTROD_MAX_RETRIES_DOC);
    }
 }

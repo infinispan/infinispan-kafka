@@ -27,19 +27,22 @@ $KAFKA_HOME/bin/connect-standalone $KAFKA_HOME/config/connect-standalone.propert
 
 ## Sink Connector Properties
 
-| Name                                 | Description                                                                                                               | Type    | Default        | Importance |
-|--------------------------------------|---------------------------------------------------------------------------------------------------------------------------|-------- |--------------- |------------|
-| infinispan.connection.hosts          | List of comma separated Infinispan hosts                                                                                  | string  | localhost      | high       |
-| infinispan.connection.hotrod.port    | Infinispan Hot Rod port                                                                                                   | int     | 11222          | high       |
-| infinispan.connection.cache.name     | Infinispan Cache name of use                                                                                              | String  | default        | medium     |
-| infinispan.use.proto                 | If true, the Remote Cache Manager will be configured to use protostream schemas                                           | boolean | false          | medium     |
-| infinispan.proto.marshaller.class    | If infinispan.use.proto is true, this option has to contain an annotated protostream class to be used                     | Class   | String.class   | medium     |
-| infinispan.cache.force.return.values | By default, previously existing values for Map operations are not returned, if set to true the values will be returned    | boolean | false          | low        |
-| infinispan.use.lifespan              | If true, the Remote Cache Manager will be configured to use Lifespan associated to cache entries                          | boolean | false          | low        |
-| infinispan.use.maxidle               | If true, the Remote Cache Manager will be configured to use Max idle value associated to cache entries                    | boolean | false          | low        |
-| infinispan.cache.lifespan.entry      | If infinispan.use.lifespan is true, this option has to the lifespan associated with the entries to be stored (in seconds) | long    | false          | low        |
-| infinispan.cache.maxidle.entry       | If infinispan.use.maxidle is true, this option has to the max idle associated with the entries to be stored (in seconds)  | long    | false          | low        |
-| infinispan.hotrod.protocol.version   | The infinispan hotrod client protocol version to use                                                                      | int     | default        | low        |
+| Name                                 | Description                                                                                                               | Type    | Default                  | Importance |
+|--------------------------------------|---------------------------------------------------------------------------------------------------------------------------|-------- |------------------------- |------------|
+| infinispan.connection.hosts          | List of comma separated Infinispan hosts                                                                                  | string  | localhost                | high       |
+| infinispan.connection.hotrod.port    | Infinispan Hot Rod port                                                                                                   | int     | 11222                    | high       |
+| infinispan.connection.cache.name     | Infinispan Cache name of use                                                                                              | String  | default                  | medium     |
+| infinispan.use.proto                 | If true, the Remote Cache Manager will be configured to use protostream schemas                                           | boolean | false                    | medium     |
+| infinispan.proto.marshaller.class    | If infinispan.use.proto is true, this option has to contain an annotated protostream class to be used                     | Class   | String.class             | medium     |
+| infinispan.cache.force.return.values | By default, previously existing values for Map operations are not returned, if set to true the values will be returned    | boolean | false                    | low        |
+| infinispan.use.lifespan              | If true, the Remote Cache Manager will be configured to use Lifespan associated to cache entries                          | boolean | false                    | low        |
+| infinispan.use.maxidle               | If true, the Remote Cache Manager will be configured to use Max idle value associated to cache entries                    | boolean | false                    | low        |
+| infinispan.cache.lifespan.entry      | If infinispan.use.lifespan is true, this option has to the lifespan associated with the entries to be stored (in seconds) | long    | false                    | low        |
+| infinispan.cache.maxidle.entry       | If infinispan.use.maxidle is true, this option has to the max idle associated with the entries to be stored (in seconds)  | long    | false                    | low        |
+| infinispan.hotrod.protocol.version   | The infinispan hotrod client protocol version to use                                                                      | String  | DEFAULT_PROTOCOL_VERSION | low        |
+| infinispan.hotrod.socket_timeout     | The infinispan hotrod client timeout for socket read/writes                                                               | int     | 5000                     | low        |
+| infinispan.hotrod.connect_timeout    | The infinispan hotrod client timeout for connections                                                                      | int     | 5000                     | low        |
+| infinispan.hotrod.max_retries        | The infinispan hotrod client maximum number of operation retries                                                          | int     | 5                        | low        |
 
 ## Configuration example
 
