@@ -5,7 +5,8 @@
   <!-- Assembles a packaged version targeting OS installation. -->
   <id>package</id>
   <formats>
-    <format>dir</format>
+    <format>zip</format>
+    <format>tar.gz</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
@@ -29,7 +30,7 @@
   </fileSets>
   <dependencySets>
     <dependencySet>
-      <outputDirectory>share/java/${project.name}</outputDirectory>
+      <outputDirectory>${project.name}/</outputDirectory>
       <useProjectArtifact>true</useProjectArtifact>
       <useTransitiveFiltering>true</useTransitiveFiltering>
       <excludes>
