@@ -30,7 +30,7 @@
   </fileSets>
   <dependencySets>
     <dependencySet>
-      <outputDirectory>${project.name}/</outputDirectory>
+      <outputDirectory>${project.name}-connector/</outputDirectory>
       <useProjectArtifact>true</useProjectArtifact>
       <useTransitiveFiltering>true</useTransitiveFiltering>
       <excludes>
