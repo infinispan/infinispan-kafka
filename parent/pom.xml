@@ -102,7 +102,7 @@
         <version.maven.surefire>3.0.0-M4</version.maven.surefire>
         <version.maven.javadoc>2.10.4</version.maven.javadoc>
         <version.maven.source>3.2.1</version.maven.source>
-        <version.maven.resources>3.1.0</version.maven.resources>
+        <version.maven.resources>3.2.0</version.maven.resources>
         <version.maven.antrun>1.8</version.maven.antrun>
         <version.maven.nexus-staging>1.6.7</version.maven.nexus-staging>
         <version.maven.buildhelper>1.12</version.maven.buildhelper>
